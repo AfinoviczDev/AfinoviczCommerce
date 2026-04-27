@@ -1,9 +1,12 @@
 package dev.afinovicz.AfinoviczCommerce.controller;
 
+import dev.afinovicz.AfinoviczCommerce.dto.ProductDTO;
 import dev.afinovicz.AfinoviczCommerce.entities.Product;
 import dev.afinovicz.AfinoviczCommerce.repositories.ProductRepository;
+import dev.afinovicz.AfinoviczCommerce.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,13 +16,15 @@ import java.util.Optional;
 @RequestMapping(value = "/products")
 public class ProductController {
 
-    @Autowired
-    private ProductRepository repository;
+    private final ProductService service;
 
-    @GetMapping
-    public String teste() {
-        Optional<Product> result = repository.findById(1L);
-        Product product = result.get();
-        return product.getName();
+    public ProductController(ProductService service) {
+        this.service = service;
+    }
+
+    @GetMapping(value = "/{id}")
+    public ProductDTO findById(@PathVariable Long id) {
+        ProductDTO dto = service.findById(id);
+        return dto;
     }
 }
