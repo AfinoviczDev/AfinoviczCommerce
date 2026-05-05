@@ -3,6 +3,7 @@ package dev.afinovicz.AfinoviczCommerce.services;
 import dev.afinovicz.AfinoviczCommerce.dto.ProductDTO;
 import dev.afinovicz.AfinoviczCommerce.entities.Product;
 import dev.afinovicz.AfinoviczCommerce.repositories.ProductRepository;
+import dev.afinovicz.AfinoviczCommerce.services.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,10 +23,9 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public ProductDTO findById(Long id) {
-        Optional<Product> result = repository.findById(id);
-        Product product = result.get();
-        ProductDTO dto = new ProductDTO(product);
-        return dto;
+        Product product = repository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Recurso não encontrado!"));
+        return new ProductDTO(product);
     }
 
     @Transactional(readOnly = true)
